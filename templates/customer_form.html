@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Add' if mode == 'add' else 'Edit' }} Customer{% endblock %}
+{% block content %}
+<div class="section">
+    <h2>{{ 'Add' if mode == 'add' else 'Edit' }} Customer</h2>
+    <form method="post">
+        <div class="form-row">
+            <label for="customer_id">Customer ID</label>
+            <input type="number" id="customer_id" name="customer_id" min="1" required
+                   value="{{ item.customer_id }}" {{ 'readonly' if mode == 'edit' }}>
+        </div>
+        <div class="form-row">
+            <label for="customer_name">Customer Name</label>
+            <input type="text" id="customer_name" name="customer_name" maxlength="100" required
+                   value="{{ item.customer_name }}">
+        </div>
+        <div class="form-row">
+            <label for="address">Address</label>
+            <input type="text" id="address" name="address" maxlength="255" required
+                   value="{{ item.address }}">
+        </div>
+        <div class="form-row">
+            <label for="date_of_birth">Date of Birth</label>
+            <input type="date" id="date_of_birth" name="date_of_birth" required
+                   value="{{ item.date_of_birth }}">
+        </div>
+        <div class="form-row">
+            <label for="phone">Phone</label>
+            <input type="text" id="phone" name="phone" maxlength="15" required value="{{ item.phone }}">
+            <div class="hint">7 to 15 characters, e.g. 9000010001 (fictional numbers only)</div>
+        </div>
+        <button type="submit">{{ 'Add Customer' if mode == 'add' else 'Save Changes' }}</button>
+        <a class="button grey" href="{{ url_for('customers') }}">Cancel</a>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% from "macros.html" import sort_controls, delete_button %}
+{% block title %}Lockers{% endblock %}
+{% block content %}
+<h2>Lockers</h2>
+<p><a class="button" href="{{ url_for('locker_add') }}">Add Locker</a></p>
+
+<form method="get" class="filter-form">
+    <label>Search (number, size or customer) <input type="text" name="q" value="{{ q }}"></label>
+    <label>Status
+        <select name="status">
+            <option value="">All</option>
+            <option value="assigned" {{ 'selected' if status == 'assigned' }}>Assigned</option>
+            <option value="available" {{ 'selected' if status == 'available' }}>Available</option>
+        </select>
+    </label>
+    {{ sort_controls(sort_options, sort, order) }}
+    <button type="submit">Apply</button>
+    <a class="button grey" href="{{ url_for('lockers') }}">Reset</a>
+</form>
+
+{% if rows %}
+<div class="table-wrap">
+<table>
+    <tr><th>Locker No</th><th>Size</th><th class="num">Rent</th><th>Assigned Customer</th><th>Status</th><th>Actions</th></tr>
+    {% for k in rows %}
+    <tr>
+        <td>{{ k.locker_no }}</td>
+        <td>{{ k.size }}</td>
+        <td class="num">{{ k.rent | money }}</td>
+        <td>
+            {% if k.customer_id %}
+            <a href="{{ url_for('customer_view', customer_id=k.customer_id) }}">{{ k.customer_id }} - {{ k.customer_name }}</a>
+            {% else %}-{% endif %}
+        </td>
+        <td>
+            {% if k.customer_id %}<span class="status-assigned">Assigned</span>
+            {% else %}<span class="status-available">Available</span>{% endif %}
+        </td>
+        <td class="actions">
+            <a class="button" href="{{ url_for('locker_edit', locker_no=k.locker_no) }}">Edit</a>
+            {{ delete_button(url_for('locker_delete', locker_no=k.locker_no), 'Delete this locker?') }}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+</div>
+{% else %}
+<p class="empty">No lockers found.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% from "macros.html" import sort_controls, delete_button %}
+{% block title %}Employees{% endblock %}
+{% block content %}
+<h2>Employees</h2>
+<p><a class="button" href="{{ url_for('employee_add') }}">Add Employee</a></p>
+
+<form method="get" class="filter-form">
+    <label>Search (ID or name) <input type="text" name="q" value="{{ q }}"></label>
+    <label>Branch
+        <select name="branch">
+            <option value="">All branches</option>
+            {% for b in branch_list %}
+            <option value="{{ b.branch_code }}" {{ 'selected' if branch == b.branch_code }}>
+                {{ b.branch_code }} - {{ b.branch_location }}
+            </option>
+            {% endfor %}
+        </select>
+    </label>
+    <label>Designation
+        <select name="designation">
+            <option value="">All designations</option>
+            {% for d in designations %}
+            <option value="{{ d }}" {{ 'selected' if designation == d }}>{{ d }}</option>
+            {% endfor %}
+        </select>
+    </label>
+    {{ sort_controls(sort_options, sort, order) }}
+    <button type="submit">Apply</button>
+    <a class="button grey" href="{{ url_for('employees') }}">Reset</a>
+</form>
+
+{% if rows %}
+<div class="table-wrap">
+<table>
+    <tr>
+        <th>Employee ID</th><th>Name</th><th>Designation</th><th class="num">Salary</th><th>Branch</th><th>Actions</th>
+    </tr>
+    {% for e in rows %}
+    <tr>
+        <td>{{ e.employee_id }}</td>
+        <td>{{ e.employee_name }}</td>
+        <td>{{ e.designation }}</td>
+        <td class="num">{{ e.salary | money }}</td>
+        <td>{{ e.branch_code }} - {{ e.branch_location }}</td>
+        <td class="actions">
+            <a class="button" href="{{ url_for('employee_edit', employee_id=e.employee_id) }}">Edit</a>
+            {{ delete_button(url_for('employee_delete', employee_id=e.employee_id), 'Delete this employee?') }}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+</div>
+{% else %}
+<p class="empty">No employees found.</p>
+{% endif %}
+{% endblock %}

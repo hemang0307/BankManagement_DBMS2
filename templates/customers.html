@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% from "macros.html" import sort_controls, delete_button %}
+{% block title %}Customers{% endblock %}
+{% block content %}
+<h2>Customers</h2>
+<p><a class="button" href="{{ url_for('customer_add') }}">Add Customer</a></p>
+
+<form method="get" class="filter-form">
+    <label>Search (ID or name) <input type="text" name="q" value="{{ q }}"></label>
+    {{ sort_controls(sort_options, sort, order) }}
+    <button type="submit">Apply</button>
+    <a class="button grey" href="{{ url_for('customers') }}">Reset</a>
+</form>
+
+{% if rows %}
+<div class="table-wrap">
+<table>
+    <tr>
+        <th>Customer ID</th><th>Name</th><th>Address</th><th>Date of Birth</th><th>Phone</th><th>Actions</th>
+    </tr>
+    {% for c in rows %}
+    <tr>
+        <td>{{ c.customer_id }}</td>
+        <td>{{ c.customer_name }}</td>
+        <td>{{ c.address }}</td>
+        <td>{{ c.date_of_birth.strftime('%d-%m-%Y') }}</td>
+        <td>{{ c.phone }}</td>
+        <td class="actions">
+            <a class="button" href="{{ url_for('customer_view', customer_id=c.customer_id) }}">View</a>
+            <a class="button" href="{{ url_for('customer_edit', customer_id=c.customer_id) }}">Edit</a>
+            {{ delete_button(url_for('customer_delete', customer_id=c.customer_id), 'Delete this customer?') }}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+</div>
+<p>{{ rows | length }} customer(s) found.</p>
+{% else %}
+<p class="empty">No customers found.</p>
+{% endif %}
+{% endblock %}

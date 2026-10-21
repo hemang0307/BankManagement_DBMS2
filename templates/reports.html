@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Reports{% endblock %}
+{% block content %}
+<h2>Reports</h2>
+
+<h3>1. Number of customers</h3>
+<table>
+    <tr><th>Total customers</th></tr>
+    <tr><td>{{ customer_count }}</td></tr>
+</table>
+
+<div class="two-col">
+    <div>
+        <h3>2. Accounts by account type</h3>
+        <table>
+            <tr><th>Account Type</th><th class="num">Number of Accounts</th></tr>
+            {% for r in accounts_by_type %}
+            <tr><td>{{ r.account_type }}</td><td class="num">{{ r.total_accounts }}</td></tr>
+            {% else %}
+            <tr><td colspan="2">No data.</td></tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div>
+        <h3>6. Transaction count by type</h3>
+        <table>
+            <tr><th>Transaction Type</th><th class="num">Number of Transactions</th></tr>
+            {% for r in trans_by_type %}
+            <tr><td>{{ r.trans_type }}</td><td class="num">{{ r.total_transactions }}</td></tr>
+            {% else %}
+            <tr><td colspan="2">No data.</td></tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+
+<h3>3. Accounts and total balance by branch</h3>
+<div class="table-wrap">
+<table>
+    <tr><th>Branch Code</th><th>Location</th><th class="num">Accounts</th><th class="num">Total Balance</th></tr>
+    {% for r in by_branch %}
+    <tr>
+        <td>{{ r.branch_code }}</td><td>{{ r.branch_location }}</td>
+        <td class="num">{{ r.total_accounts }}</td><td class="num">{{ r.total_balance | money }}</td>
+    </tr>
+    {% else %}
+    <tr><td colspan="4">No data.</td></tr>
+    {% endfor %}
+</table>
+</div>
+
+<h3>4. Total loan amount by loan type</h3>
+<table>
+    <tr><th>Loan Type</th><th class="num">Number of Loans</th><th class="num">Total Amount</th></tr>
+    {% for r in loans_by_type %}
+    <tr><td>{{ r.loan_type }}</td><td class="num">{{ r.total_loans }}</td><td class="num">{{ r.total_amount | money }}</td></tr>
+    {% else %}
+    <tr><td colspan="3">No data.</td></tr>
+    {% endfor %}
+</table>
+
+<h3>5. Total deposits and withdrawals</h3>
+<table>
+    <tr><th class="num">Total Deposits</th><th class="num">Total Withdrawals</th></tr>
+    <tr><td class="num">{{ money_totals.total_deposits | money }}</td><td class="num">{{ money_totals.total_withdrawals | money }}</td></tr>
+</table>
+{% endblock %}

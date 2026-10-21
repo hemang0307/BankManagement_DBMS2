@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% from "macros.html" import sort_controls, delete_button %}
+{% block title %}Branches{% endblock %}
+{% block content %}
+<h2>Branches</h2>
+<p><a class="button" href="{{ url_for('branch_add') }}">Add Branch</a></p>
+
+<form method="get" class="filter-form">
+    <label>Search (code or location) <input type="text" name="q" value="{{ q }}"></label>
+    {{ sort_controls(sort_options, sort, order) }}
+    <button type="submit">Apply</button>
+    <a class="button grey" href="{{ url_for('branches') }}">Reset</a>
+</form>
+
+{% if rows %}
+<div class="table-wrap">
+<table>
+    <tr><th>Branch Code</th><th>Location</th><th>Bank</th><th>Actions</th></tr>
+    {% for b in rows %}
+    <tr>
+        <td>{{ b.branch_code }}</td>
+        <td>{{ b.branch_location }}</td>
+        <td>{{ b.bank_name }} (code {{ b.bank_code }})</td>
+        <td class="actions">
+            <a class="button" href="{{ url_for('branch_edit', branch_code=b.branch_code) }}">Edit</a>
+            {{ delete_button(url_for('branch_delete', branch_code=b.branch_code), 'Delete this branch?') }}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+</div>
+{% else %}
+<p class="empty">No branches found.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,23 @@
+{# Small reusable pieces shared by the list pages #}
+
+{% macro sort_controls(sort_options, sort, order) %}
+    <label>Sort by
+        <select name="sort">
+            {% for key, label in sort_options %}
+                <option value="{{ key }}" {{ 'selected' if key == sort }}>{{ label }}</option>
+            {% endfor %}
+        </select>
+    </label>
+    <label>Order
+        <select name="order">
+            <option value="asc" {{ 'selected' if order == 'asc' }}>Ascending</option>
+            <option value="desc" {{ 'selected' if order == 'desc' }}>Descending</option>
+        </select>
+    </label>
+{% endmacro %}
+
+{% macro delete_button(url, question) %}
+    <form method="post" action="{{ url }}" onsubmit="return confirm('{{ question }}');">
+        <button type="submit" class="danger">Delete</button>
+    </form>
+{% endmacro %}

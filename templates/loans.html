@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% from "macros.html" import sort_controls, delete_button %}
+{% block title %}Loans{% endblock %}
+{% block content %}
+<h2>Loans</h2>
+<p><a class="button" href="{{ url_for('loan_add') }}">Add Loan</a></p>
+
+<form method="get" class="filter-form">
+    <label>Loan number <input type="text" name="q" value="{{ q }}"></label>
+    <label>Loan type
+        <select name="loan_type">
+            <option value="">All types</option>
+            {% for t in loan_types %}
+            <option value="{{ t }}" {{ 'selected' if loan_type == t }}>{{ t }}</option>
+            {% endfor %}
+        </select>
+    </label>
+    <label>Branch
+        <select name="branch">
+            <option value="">All branches</option>
+            {% for b in branch_list %}
+            <option value="{{ b.branch_code }}" {{ 'selected' if branch == b.branch_code }}>
+                {{ b.branch_code }} - {{ b.branch_location }}
+            </option>
+            {% endfor %}
+        </select>
+    </label>
+    <label>Amount above <input type="number" step="0.01" name="min_amount" value="{{ min_amount }}"></label>
+    {{ sort_controls(sort_options, sort, order) }}
+    <button type="submit">Apply</button>
+    <a class="button grey" href="{{ url_for('loans') }}">Reset</a>
+</form>
+
+{% if rows %}
+<div class="table-wrap">
+<table>
+    <tr>
+        <th>Loan No</th><th>Loan Date</th><th class="num">Amount</th><th class="num">Rate (%)</th>
+        <th>Type</th><th>Branch</th><th>Handled By</th><th>Borrower(s)</th><th>Actions</th>
+    </tr>
+    {% for l in rows %}
+    <tr>
+        <td>{{ l.loan_no }}</td>
+        <td>{{ l.loan_date.strftime('%d-%m-%Y') }}</td>
+        <td class="num">{{ l.amount | money }}</td>
+        <td class="num">{{ l.rate }}</td>
+        <td>{{ l.loan_type }}</td>
+        <td>{{ l.branch_code }} - {{ l.branch_location }}</td>
+        <td>{{ l.employee_name or '-' }}</td>
+        <td>{{ l.borrowers or '-' }}</td>
+        <td class="actions">
+            <a class="button" href="{{ url_for('loan_edit', loan_no=l.loan_no) }}">Edit</a>
+            {{ delete_button(url_for('loan_delete', loan_no=l.loan_no), 'Delete this loan?') }}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+</div>
+<p>{{ rows | length }} loan(s) found.</p>
+{% else %}
+<p class="empty">No loans found.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Account {{ account.account_no }}{% endblock %}
+{% block content %}
+<div class="section">
+    <h2>Account Details</h2>
+    <table>
+        <tr><th>Account No</th><td>{{ account.account_no }}</td></tr>
+        <tr><th>Type</th><td>{{ account.account_type }}</td></tr>
+        <tr><th>Current Balance</th><td>{{ account.balance | money }}</td></tr>
+        <tr><th>Opening Date</th><td>{{ account.open_date.strftime('%d-%m-%Y') }}</td></tr>
+        <tr><th>Branch</th><td>{{ account.branch_code }} - {{ account.branch_location }}</td></tr>
+    </table>
+    <a class="button" href="{{ url_for('account_edit', account_no=account.account_no) }}">Edit</a>
+    <a class="button" href="{{ url_for('transactions', prefill=account.account_no) }}">Deposit / Withdraw</a>
+    <a class="button grey" href="{{ url_for('accounts') }}">Back to Accounts</a>
+</div>
+
+<h3>Account Holder(s)</h3>
+{% if owners %}
+<table>
+    <tr><th>Customer ID</th><th>Name</th><th>Phone</th></tr>
+    {% for c in owners %}
+    <tr>
+        <td><a href="{{ url_for('customer_view', customer_id=c.customer_id) }}">{{ c.customer_id }}</a></td>
+        <td>{{ c.customer_name }}</td><td>{{ c.phone }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}<p class="empty">No customers linked.</p>{% endif %}
+
+<h3>Recent Transactions (latest 20)</h3>
+{% if history %}
+<table>
+    <tr><th>Trans. No</th><th>Date</th><th class="num">Amount</th><th>Type</th></tr>
+    {% for t in history %}
+    <tr>
+        <td>{{ t.trans_no }}</td>
+        <td>{{ t.trans_date.strftime('%d-%m-%Y %H:%M') }}</td>
+        <td class="num">{{ t.amount | money }}</td>
+        <td>{{ t.trans_type }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}<p class="empty">No transactions for this account.</p>{% endif %}
+{% endblock %}

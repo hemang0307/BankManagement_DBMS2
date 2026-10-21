@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<h2>Dashboard</h2>
+
+<div class="stats">
+    <div class="stat"><div>Customers</div><div class="value">{{ stats.total_customers }}</div></div>
+    <div class="stat"><div>Branches</div><div class="value">{{ stats.total_branches }}</div></div>
+    <div class="stat"><div>Employees</div><div class="value">{{ stats.total_employees }}</div></div>
+    <div class="stat"><div>Accounts</div><div class="value">{{ stats.total_accounts }}</div></div>
+    <div class="stat"><div>Loans</div><div class="value">{{ stats.total_loans }}</div></div>
+    <div class="stat"><div>Total balance</div><div class="value">{{ stats.total_balance | money }}</div></div>
+</div>
+
+<h3>Latest Transactions</h3>
+{% if latest %}
+<div class="table-wrap">
+<table>
+    <tr>
+        <th>Trans. No</th><th>Account No</th><th>Date</th><th class="num">Amount</th><th>Type</th>
+    </tr>
+    {% for t in latest %}
+    <tr>
+        <td>{{ t.trans_no }}</td>
+        <td><a href="{{ url_for('account_view', account_no=t.account_no) }}">{{ t.account_no }}</a></td>
+        <td>{{ t.trans_date.strftime('%d-%m-%Y %H:%M') }}</td>
+        <td class="num">{{ t.amount | money }}</td>
+        <td>{{ t.trans_type }}</td>
+    </tr>
+    {% endfor %}
+</table>
+</div>
+{% else %}
+<p class="empty">No transactions recorded yet.</p>
+{% endif %}
+<p><a href="{{ url_for('transactions') }}">View all transactions</a></p>
+{% endblock %}

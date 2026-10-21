@@ -1,0 +1,75 @@
+/* Simple stylesheet for the Bank Management System */
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 15px;
+    line-height: 1.4;
+    color: #222;
+    background: #f4f5f7;
+}
+
+.site-header { background: #1a2b5f; color: #fff; padding: 14px 24px; }
+.site-header h1 { margin: 0; font-size: 24px; }
+
+.navbar { background: #2b3f80; padding: 0 16px; }
+.navbar a { display: inline-block; padding: 10px 12px; color: #fff; text-decoration: none; }
+.navbar a:hover, .navbar a.active { background: #1a2b5f; }
+
+.container { max-width: 1100px; margin: 20px auto; padding: 0 16px; }
+h2 { margin-top: 0; color: #1a2b5f; }
+h3 { color: #1a2b5f; margin-bottom: 6px; }
+
+.section { background: #fff; border: 1px solid #ccc; padding: 16px; margin-bottom: 20px; }
+
+/* Flash messages */
+.flash { padding: 10px 14px; margin-bottom: 12px; border: 1px solid; }
+.flash.success { background: #e6f4ea; border-color: #7bb88a; color: #1b5e20; }
+.flash.error { background: #fdeaea; border-color: #d98b8b; color: #8a1c1c; }
+
+/* Tables */
+.table-wrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; background: #fff; margin-bottom: 12px; }
+th, td { border: 1px solid #bbb; padding: 7px 9px; text-align: left; vertical-align: top; }
+th { background: #e3e7f2; }
+td.num, th.num { text-align: right; }
+.actions form { display: inline; }
+.empty { padding: 10px; background: #fff; border: 1px solid #ccc; }
+
+/* Forms and buttons */
+label { display: block; margin-bottom: 4px; font-weight: bold; }
+input[type=text], input[type=number], input[type=date], select, textarea {
+    padding: 6px; border: 1px solid #888; font-size: 15px; background: #fff;
+}
+select[multiple] { min-height: 130px; }
+.form-row { margin-bottom: 12px; }
+.form-row input[type=text], .form-row input[type=number], .form-row input[type=date],
+.form-row select, .form-row textarea { width: 100%; max-width: 420px; }
+.hint { font-size: 13px; color: #555; margin-top: 3px; }
+
+button, .button {
+    display: inline-block; padding: 6px 12px; font-size: 14px; cursor: pointer;
+    background: #2b3f80; color: #fff; border: 1px solid #1a2b5f; text-decoration: none;
+}
+button:hover, .button:hover { background: #1a2b5f; }
+button.danger { background: #b03030; border-color: #8a1c1c; }
+button.danger:hover { background: #8a1c1c; }
+.button.grey { background: #777; border-color: #555; }
+
+.filter-form { background: #fff; border: 1px solid #ccc; padding: 10px 12px; margin-bottom: 14px; }
+.filter-form label { display: inline-block; margin: 0 10px 6px 0; font-weight: normal; }
+.filter-form input[type=text], .filter-form input[type=number] { width: 150px; }
+
+/* Dashboard boxes */
+.stats { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
+.stat { background: #fff; border: 1px solid #bbb; padding: 10px 14px; min-width: 150px; }
+.stat .value { font-size: 22px; font-weight: bold; color: #1a2b5f; }
+
+.two-col { display: flex; flex-wrap: wrap; gap: 20px; }
+.two-col > div { flex: 1 1 380px; }
+
+.status-assigned { color: #8a1c1c; }
+.status-available { color: #1b5e20; }
+
+footer { text-align: center; color: #666; font-size: 13px; padding: 16px; }

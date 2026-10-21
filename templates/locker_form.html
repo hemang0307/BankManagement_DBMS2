@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Add' if mode == 'add' else 'Edit' }} Locker{% endblock %}
+{% block content %}
+<div class="section">
+    <h2>{{ 'Add' if mode == 'add' else 'Edit' }} Locker</h2>
+    <form method="post">
+        <div class="form-row">
+            <label for="locker_no">Locker Number</label>
+            <input type="number" id="locker_no" name="locker_no" min="1" required
+                   value="{{ item.locker_no }}" {{ 'readonly' if mode == 'edit' }}>
+        </div>
+        <div class="form-row">
+            <label for="size">Size</label>
+            <select id="size" name="size" required>
+                <option value="">-- Select size --</option>
+                {% for s in locker_sizes %}
+                <option value="{{ s }}" {{ 'selected' if item.size == s }}>{{ s }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-row">
+            <label for="rent">Annual Rent (Rs.)</label>
+            <input type="number" id="rent" name="rent" min="0" step="0.01" required value="{{ item.rent }}">
+        </div>
+        <div class="form-row">
+            <label for="customer_id">Assigned Customer</label>
+            <select id="customer_id" name="customer_id">
+                <option value="">-- Unassigned (available) --</option>
+                {% for c in customer_list %}
+                <option value="{{ c.customer_id }}" {{ 'selected' if item.customer_id | string == c.customer_id | string }}>
+                    {{ c.customer_id }} - {{ c.customer_name }}
+                </option>
+                {% endfor %}
+            </select>
+            <div class="hint">Choose "Unassigned" to make the locker available.</div>
+        </div>
+        <button type="submit">{{ 'Add Locker' if mode == 'add' else 'Save Changes' }}</button>
+        <a class="button grey" href="{{ url_for('lockers') }}">Cancel</a>
+    </form>
+</div>
+{% endblock %}

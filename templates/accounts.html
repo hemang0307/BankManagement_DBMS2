@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% from "macros.html" import sort_controls, delete_button %}
+{% block title %}Accounts{% endblock %}
+{% block content %}
+<h2>Accounts</h2>
+<p><a class="button" href="{{ url_for('account_add') }}">Add Account</a></p>
+
+<form method="get" class="filter-form">
+    <label>Account number <input type="text" name="q" value="{{ q }}"></label>
+    <label>Type
+        <select name="account_type">
+            <option value="">All types</option>
+            {% for t in account_types %}
+            <option value="{{ t }}" {{ 'selected' if account_type == t }}>{{ t }}</option>
+            {% endfor %}
+        </select>
+    </label>
+    <label>Branch
+        <select name="branch">
+            <option value="">All branches</option>
+            {% for b in branch_list %}
+            <option value="{{ b.branch_code }}" {{ 'selected' if branch == b.branch_code }}>
+                {{ b.branch_code }} - {{ b.branch_location }}
+            </option>
+            {% endfor %}
+        </select>
+    </label>
+    <label>Balance above <input type="number" step="0.01" name="min_balance" value="{{ min_balance }}"></label>
+    {{ sort_controls(sort_options, sort, order) }}
+    <button type="submit">Apply</button>
+    <a class="button grey" href="{{ url_for('accounts') }}">Reset</a>
+</form>
+
+{% if rows %}
+<div class="table-wrap">
+<table>
+    <tr>
+        <th>Account No</th><th>Type</th><th class="num">Balance</th><th>Opening Date</th>
+        <th>Branch</th><th>Customer(s)</th><th>Actions</th>
+    </tr>
+    {% for a in rows %}
+    <tr>
+        <td><a href="{{ url_for('account_view', account_no=a.account_no) }}">{{ a.account_no }}</a></td>
+        <td>{{ a.account_type }}</td>
+        <td class="num">{{ a.balance | money }}</td>
+        <td>{{ a.open_date.strftime('%d-%m-%Y') }}</td>
+        <td>{{ a.branch_code }} - {{ a.branch_location }}</td>
+        <td>{{ a.owners or '-' }}</td>
+        <td class="actions">
+            <a class="button" href="{{ url_for('account_edit', account_no=a.account_no) }}">Edit</a>
+            {{ delete_button(url_for('account_delete', account_no=a.account_no), 'Delete this account?') }}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+</div>
+<p>{{ rows | length }} account(s) found.</p>
+{% else %}
+<p class="empty">No accounts found.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Customer {{ customer.customer_id }}{% endblock %}
+{% block content %}
+<div class="section">
+    <h2>Customer Information</h2>
+    <table>
+        <tr><th>Customer ID</th><td>{{ customer.customer_id }}</td></tr>
+        <tr><th>Name</th><td>{{ customer.customer_name }}</td></tr>
+        <tr><th>Address</th><td>{{ customer.address }}</td></tr>
+        <tr><th>Date of Birth</th><td>{{ customer.date_of_birth.strftime('%d-%m-%Y') }}</td></tr>
+        <tr><th>Phone</th><td>{{ customer.phone }}</td></tr>
+    </table>
+    <a class="button" href="{{ url_for('customer_edit', customer_id=customer.customer_id) }}">Edit</a>
+    <a class="button grey" href="{{ url_for('customers') }}">Back to Customers</a>
+</div>
+
+<h3>Accounts</h3>
+{% if accounts_of %}
+<table>
+    <tr><th>Account No</th><th>Type</th><th class="num">Balance</th><th>Opening Date</th></tr>
+    {% for a in accounts_of %}
+    <tr>
+        <td><a href="{{ url_for('account_view', account_no=a.account_no) }}">{{ a.account_no }}</a></td>
+        <td>{{ a.account_type }}</td>
+        <td class="num">{{ a.balance | money }}</td>
+        <td>{{ a.open_date.strftime('%d-%m-%Y') }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}<p class="empty">No accounts.</p>{% endif %}
+
+<h3>Loans</h3>
+{% if loans_of %}
+<table>
+    <tr><th>Loan No</th><th>Type</th><th class="num">Amount</th><th class="num">Rate (%)</th><th>Loan Date</th></tr>
+    {% for l in loans_of %}
+    <tr>
+        <td>{{ l.loan_no }}</td><td>{{ l.loan_type }}</td>
+        <td class="num">{{ l.amount | money }}</td><td class="num">{{ l.rate }}</td>
+        <td>{{ l.loan_date.strftime('%d-%m-%Y') }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}<p class="empty">No loans.</p>{% endif %}
+
+<h3>Lockers</h3>
+{% if lockers_of %}
+<table>
+    <tr><th>Locker No</th><th>Size</th><th class="num">Rent</th></tr>
+    {% for k in lockers_of %}
+    <tr><td>{{ k.locker_no }}</td><td>{{ k.size }}</td><td class="num">{{ k.rent | money }}</td></tr>
+    {% endfor %}
+</table>
+{% else %}<p class="empty">No lockers assigned.</p>{% endif %}
+{% endblock %}

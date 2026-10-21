@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% from "macros.html" import sort_controls %}
+{% block title %}Transactions{% endblock %}
+{% block content %}
+<h2>Transactions</h2>
+
+<div class="two-col">
+    <div class="section">
+        <h3>Record a Deposit</h3>
+        <form method="post" action="{{ url_for('deposit') }}">
+            <div class="form-row">
+                <label for="dep_account">Account</label>
+                <select id="dep_account" name="account_no" required>
+                    <option value="">-- Select account --</option>
+                    {% for a in account_list %}
+                    <option value="{{ a.account_no }}" {{ 'selected' if prefill == a.account_no }}>
+                        {{ a.account_no }} ({{ a.account_type }}, {{ a.balance | money }})
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-row">
+                <label for="dep_amount">Amount (Rs.)</label>
+                <input type="number" id="dep_amount" name="amount" min="0.01" step="0.01" required>
+            </div>
+            <button type="submit">Deposit</button>
+        </form>
+    </div>
+    <div class="section">
+        <h3>Record a Withdrawal</h3>
+        <form method="post" action="{{ url_for('withdraw') }}">
+            <div class="form-row">
+                <label for="wd_account">Account</label>
+                <select id="wd_account" name="account_no" required>
+                    <option value="">-- Select account --</option>
+                    {% for a in account_list %}
+                    <option value="{{ a.account_no }}" {{ 'selected' if prefill == a.account_no }}>
+                        {{ a.account_no }} ({{ a.account_type }}, {{ a.balance | money }})
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-row">
+                <label for="wd_amount">Amount (Rs.)</label>
+                <input type="number" id="wd_amount" name="amount" min="0.01" step="0.01" required>
+            </div>
+            <button type="submit">Withdraw</button>
+        </form>
+    </div>
+</div>
+
+<h3>Transaction History</h3>
+<form method="get" class="filter-form">
+    <label>Search (trans. no or account no) <input type="text" name="q" value="{{ q }}"></label>
+    <label>Type
+        <select name="trans_type">
+            <option value="">All types</option>
+            {% for t in transaction_types %}
+            <option value="{{ t }}" {{ 'selected' if trans_type == t }}>{{ t }}</option>
+            {% endfor %}
+        </select>
+    </label>
+    <label>From <input type="date" name="date_from" value="{{ date_from }}"></label>
+    <label>To <input type="date" name="date_to" value="{{ date_to }}"></label>
+    {{ sort_controls(sort_options, sort, order) }}
+    <button type="submit">Apply</button>
+    <a class="button grey" href="{{ url_for('transactions') }}">Reset</a>
+</form>
+
+{% if rows %}
+<div class="table-wrap">
+<table>
+    <tr>
+        <th>Trans. No</th><th>Account No</th><th>Account Type</th><th>Date</th>
+        <th class="num">Amount</th><th>Type</th>
+    </tr>
+    {% for t in rows %}
+    <tr>
+        <td>{{ t.trans_no }}</td>
+        <td><a href="{{ url_for('account_view', account_no=t.account_no) }}">{{ t.account_no }}</a></td>
+        <td>{{ t.account_type }}</td>
+        <td>{{ t.trans_date.strftime('%d-%m-%Y %H:%M') }}</td>
+        <td class="num">{{ t.amount | money }}</td>
+        <td>{{ t.trans_type }}</td>
+    </tr>
+    {% endfor %}
+</table>
+</div>
+<p>{{ rows | length }} transaction(s) found.</p>
+{% else %}
+<p class="empty">No transactions found.</p>
+{% endif %}
+{% endblock %}
